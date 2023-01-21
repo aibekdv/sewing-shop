@@ -5,13 +5,28 @@ import { BrowserRouter } from 'react-router-dom'
 import { store } from './redux/store'
 import App from './App'
 import './styles/main.scss'
+import { createTheme, ThemeProvider } from '@mui/material'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1315,
+      xl: 1536,
+    },
+  },
+})
+
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>,
+  <ThemeProvider theme={theme}>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </ThemeProvider>,
 )
