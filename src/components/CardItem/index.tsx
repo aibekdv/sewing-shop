@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import styles from './CardItem.module.scss'
 import { Box } from '@mui/system'
 import { ICardItem, IMasterItem } from '../../types/card.types'
+import ModalCardItem from '../ModalCardItem'
 
 interface ICardProps {
   card?: ICardItem
@@ -15,6 +16,7 @@ interface ICardProps {
 
 const CardItem: React.FC<ICardProps> = ({ card, master }) => {
   const [imgIdx, setImgIdx] = React.useState(0)
+  const [isOpenModal, setIsOpenModal] = React.useState(false)
 
   return (
     <Card className={styles.card} sx={{ boxShadow: 'none', borderRadius: 0 }}>
@@ -76,7 +78,11 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
       ) : (
         <>
           <CardContent sx={{ p: 0 }}>
-            <img src={card?.imgUrl[imgIdx]} alt='card item one' />
+            <img
+              src={card?.imgUrl[imgIdx]}
+              alt='card item one'
+              onClick={() => setIsOpenModal(true)}
+            />
             <Box>
               <Typography
                 variant='h6'
@@ -88,10 +94,12 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
                   mt: '25px',
                   lineHeight: '23px',
                   textAlign: 'center',
+                  cursor: 'pointer',
                   [theme.breakpoints.down('sm')]: {
                     fontSize: 18,
                   },
                 })}
+                onClick={() => setIsOpenModal(true)}
               >
                 {card.title}
               </Typography>
@@ -151,6 +159,11 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
               Добавить в корзину
             </Button>
           </CardActions>
+          <ModalCardItem
+            handleClose={() => setIsOpenModal(false)}
+            open={isOpenModal}
+            product={card}
+          />
         </>
       )}
     </Card>
