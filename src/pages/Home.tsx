@@ -14,6 +14,7 @@ import ImgBlock3OurPart3 from '../assets/block3OurPart3.png'
 import ImgBlock3OurPart4 from '../assets/block3OurPart4.png'
 import { ICardItem, IMasterItem } from '../types/card.types'
 import Cards from '../components/Cards'
+import PicBlock from '../components/PicBlock'
 
 const Home: React.FC = () => {
   const cards: ICardItem[] = [
@@ -75,11 +76,12 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Box
-        component='img'
-        src={ImgBlock1}
-        alt='Фурнитура'
-        sx={{ width: '100%', height: { xs: 400, md: 600, lg: 700 }, objectFit: 'cover' }}
+      <PicBlock
+        text='БЕСТСЕЛЛЕР 2023 ПРЕМИУМ КАЧЕСТВА'
+        imgUrl={ImgBlock1}
+        textColor='white'
+        right
+        btnColor='rgba(246, 234, 234, 0.6)'
       />
 
       <Container maxWidth='lg' sx={{ my: 2 }}>
@@ -156,11 +158,11 @@ const Home: React.FC = () => {
         </Container>
       </Box>
 
-      <Box
-        component='img'
-        src={ImgBlock2}
-        alt='Ткань/Нитка'
-        sx={{ width: '100%', height: { xs: 400, md: 600, lg: 700 }, objectFit: 'cover' }}
+      <PicBlock
+        text='ВЫСОКОКАЧЕСТВЕННЫЕ ФУРНИТУРЫ'
+        imgUrl={ImgBlock2}
+        textColor='white'
+        btnColor='rgba(255, 255, 255, 1)'
       />
 
       <Container maxWidth='lg' sx={{ my: 2 }}>
@@ -198,11 +200,11 @@ const Home: React.FC = () => {
         </Container>
       </Box>
 
-      <Box
-        component='img'
-        src={ImgBlock3}
-        alt='Швейные машинки'
-        sx={{ width: '100%', height: { xs: 400, md: 600, lg: 700 }, objectFit: 'cover' }}
+      <PicBlock
+        text='ТОП 10 ПОПУЛЯРНЫХ МАШИН В НАШЕМ МАГАЗИНЕ'
+        imgUrl={ImgBlock3}
+        textColor='rgba(66, 81, 104, 1)'
+        btnColor='rgba(246, 234, 234, 0.7)'
       />
 
       <Container maxWidth='lg' sx={{ mb: 2 }}>

@@ -1,21 +1,21 @@
 import React from 'react'
 import { styled, alpha } from '@mui/material/styles'
+import { Badge } from '@mui/material'
+import { Container } from '@mui/system'
+import { Link } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
-import { Badge, CardMedia } from '@mui/material'
-
 import burger from '../Header/headerImage/burger.png'
 import logo from '../Header/headerImage/logo.png'
 import search from '../Header/headerImage/search.png'
 import heart from '../Header/headerImage/heart.png'
 import cart from '../Header/headerImage/cart.png'
 import user from '../Header/headerImage/user.png'
-import { Container } from '@mui/system'
 import BFDrawer from '../BFDrawer'
-import { Link } from 'react-router-dom'
+import BasicMenu from '../BasicMenu'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,80 +58,109 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-export default function Header() {
+interface IHeaderProps {
+  isAuth?: boolean
+}
+
+const Header: React.FC<IHeaderProps> = ({ isAuth }) => {
   const [openCart, setIsOpenCart] = React.useState(false)
   const [openFavorite, setIsOpenFavorite] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const openMenu = Boolean(anchorEl)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar sx={{ backgroundColor: '#FFFFFF', pt: '0.5%' }} position='static'>
+        <AppBar
+          sx={{ backgroundColor: '#FFFFFF', pt: '0.5%', boxShadow: 'none' }}
+          position='static'
+        >
           <Container maxWidth='lg'>
-            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', px: '0 !important' }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton
-                  color='inherit'
-                  aria-label='open drawer'
-                  sx={{ mr: 1, width: '40px', height: '40px' }}
-                >
-                  <img src={burger} alt='menu' />
-                </IconButton>
+                {!isAuth && (
+                  <>
+                    <IconButton
+                      color='inherit'
+                      aria-controls={openMenu ? 'basic-menu' : undefined}
+                      aria-haspopup='true'
+                      aria-expanded={openMenu ? 'true' : undefined}
+                      onClick={handleClick}
+                      sx={{ mr: 1, width: '40px', height: '40px', ml: -1 }}
+                    >
+                      <img src={burger} alt='menu' />
+                    </IconButton>
+                    <BasicMenu
+                      open={openMenu}
+                      onCloseMenu={() => setAnchorEl(null)}
+                      anchorEl={anchorEl}
+                    />
+                  </>
+                )}
                 <Link to='/'>
                   <Box component='img' src={logo} sx={{ width: { xs: '120px', sm: '150px' } }} />
                 </Link>
               </Box>
 
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Search
-                  sx={{
-                    width: { xs: '100px', sm: '200px' },
-                    mr: 1,
-                    display: { xs: 'none', sm: 'block' },
-                  }}
-                >
-                  <SearchIconWrapper>
-                    <CardMedia component='img' src={search} />
-                  </SearchIconWrapper>
-                  <StyledInputBase
+              {!isAuth && (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Search
                     sx={{
-                      width: '100%',
-                      color: 'black',
-                      border: 'solid 1px grey',
-                      borderRadius: '20px ',
+                      width: { xs: '100px', sm: '200px' },
+                      mr: 1,
+                      display: { xs: 'none', sm: 'block' },
                     }}
-                    placeholder='поиск'
-                    inputProps={{ 'aria-label': 'search' }}
-                  />
-                </Search>
+                  >
+                    <SearchIconWrapper>
+                      <Box component='img' src={search} />
+                    </SearchIconWrapper>
+                    <StyledInputBase
+                      sx={{
+                        width: '100%',
+                        color: 'black',
+                        border: 'solid 1px grey',
+                        borderRadius: '20px ',
+                      }}
+                      placeholder='поиск'
+                      inputProps={{ 'aria-label': 'search' }}
+                    />
+                  </Search>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-bettween' }}>
-                  <IconButton
-                    aria-label='show 4 new mails'
-                    color='inherit'
-                    onClick={() => setIsOpenFavorite(true)}
-                  >
-                    <Badge sx={{ width: { xs: '90%', sm: '100%' } }} color='error'>
-                      <CardMedia component='img' src={heart} />
-                    </Badge>
-                  </IconButton>
-                  {/* <p>Messages</p> */}r
-                  <IconButton
-                    aria-label='show 17 new notifications'
-                    color='inherit'
-                    onClick={() => setIsOpenCart(true)}
-                  >
-                    <Badge sx={{ width: { xs: '90%', sm: '100%' } }}>
-                      <CardMedia component='img' src={cart} />
-                    </Badge>
-                  </IconButton>
-                  {/* <p>Notifications</p> */}
-                  <IconButton aria-label='show 17 new notifications' color='inherit'>
-                    <Badge sx={{ width: { xs: '90%', sm: '100%' } }}>
-                      <CardMedia component='img' src={user} />
-                    </Badge>
-                  </IconButton>
-                  {/* <p>Notifications</p> */}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-bettween' }}>
+                    <IconButton
+                      aria-label='show 4 new mails'
+                      color='inherit'
+                      onClick={() => setIsOpenFavorite(true)}
+                    >
+                      <Badge sx={{ width: '21.60px' }} color='error'>
+                        <Box component='img' src={heart} />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      aria-label='show 17 new notifications'
+                      color='inherit'
+                      onClick={() => setIsOpenCart(true)}
+                    >
+                      <Badge sx={{ width: '21.60px' }}>
+                        <Box component='img' src={cart} />
+                      </Badge>
+                    </IconButton>
+                    <Link to='/login' style={{ padding: '8px' }}>
+                      <Badge sx={{ width: '21.60px' }}>
+                        <Box
+                          component='img'
+                          src={user}
+                          sx={{ width: '21.60px', height: '21.60px' }}
+                        />
+                      </Badge>
+                    </Link>
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Toolbar>
           </Container>
         </AppBar>
@@ -141,3 +170,5 @@ export default function Header() {
     </>
   )
 }
+
+export default Header
