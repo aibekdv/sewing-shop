@@ -6,6 +6,7 @@ import { store } from './redux/store'
 import App from './App'
 import './styles/main.scss'
 import { createTheme, ThemeProvider } from '@mui/material'
+import Footer from './components/Footer'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -26,6 +27,7 @@ root.render(
     <BrowserRouter>
       <Provider store={store}>
         <App />
+        <Footer />
       </Provider>
     </BrowserRouter>
   </ThemeProvider>,
