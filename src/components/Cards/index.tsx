@@ -1,7 +1,7 @@
 import React from 'react'
 import { ICardItem, IMasterItem } from '../../types/card.types'
 import CardItem from '../CardItem'
-import { Grid } from '@mui/material'
+import { Grid, Theme } from '@mui/material'
 
 interface ICardProps {
   products?: ICardItem[]
@@ -13,8 +13,9 @@ const Cards: React.FC<ICardProps> = ({ products, masters }) => {
     <Grid
       container
       spacing={2}
-      sx={(theme) => ({
+      sx={(theme: Theme) => ({
         my: 1,
+        width: '100%',
         [theme.breakpoints.down('sm')]: {
           justifyContent: 'center',
         },
@@ -27,7 +28,7 @@ const Cards: React.FC<ICardProps> = ({ products, masters }) => {
             item
             sm={6}
             lg={4}
-            sx={(theme) => ({
+            sx={(theme: Theme) => ({
               [theme.breakpoints.down('lg')]: {
                 display: 'flex',
                 justifyContent: 'center',
@@ -45,7 +46,7 @@ const Cards: React.FC<ICardProps> = ({ products, masters }) => {
             item
             sm={6}
             lg={4}
-            sx={(theme) => ({
+            sx={(theme: Theme) => ({
               [theme.breakpoints.down('lg')]: {
                 display: 'flex',
                 justifyContent: 'center',

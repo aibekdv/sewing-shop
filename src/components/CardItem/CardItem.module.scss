@@ -1,5 +1,6 @@
 .card {
   border: 1px solid rgba(0, 0, 0, 0.3);
+  width: 100%;
 
   @media screen and (max-width: 1312px) {
     max-width: 411px;
@@ -10,8 +11,12 @@
 
   img {
     width: 100% !important;
-    max-height: 318px !important;
+    height: 318px !important;
     object-fit: fill;
+
+    @media screen and (max-width: 600px) {
+      max-height: 250px;
+    }
   }
 
   .card_btn {

@@ -2,6 +2,8 @@ import React from 'react'
 import { Box, Dialog, DialogContent, Typography, Button } from '@mui/material'
 import { ICardItem } from '../../types/card.types'
 import styles from './ModalCardItem.module.scss'
+import imgNotFound from '../../assets/notfound.png'
+import { API_URL } from '../../utils/helpers/getEnv'
 
 interface IModalItemProps {
   handleClose: () => void
@@ -11,6 +13,7 @@ interface IModalItemProps {
 
 const ModalCardItem: React.FC<IModalItemProps> = ({ handleClose, open, product }) => {
   const [imgIdx, setImgIdx] = React.useState(0)
+  const imgPath = product?.carousel[imgIdx]?.images
 
   return (
     <Dialog
@@ -43,13 +46,13 @@ const ModalCardItem: React.FC<IModalItemProps> = ({ handleClose, open, product }
         <Box sx={{ display: 'flex', width: '100%', flexDirection: { xs: 'column', md: 'row' } }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', width: { xs: '100%', md: '50%' } }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <img src={product?.imgUrl[imgIdx]} alt='card item one' />
+              <img src={imgPath ? API_URL + imgPath : imgNotFound} alt='card item one' />
               <Box className={styles.colors} sx={{ pt: { md: 3 } }}>
-                {product.colors?.map((color, index) => (
+                {product.color?.map((item, index) => (
                   <button
                     key={index}
                     style={{
-                      backgroundColor: color,
+                      backgroundColor: item.color,
                       border: imgIdx === index ? '2px solid #0047FF' : '',
                     }}
                     className={styles.btn_color}

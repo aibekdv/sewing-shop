@@ -5,6 +5,12 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCart } from './../../redux/cart/selector'
+import { ICartItem } from '../../redux/cart/types'
+import { API_URL } from '../../utils/helpers/getEnv'
+import { useAppDispatch } from '../../redux/store'
+import { addToCart, decrementCount, removeToCart } from '../../redux/cart/slice'
 
 interface IBFDrawerProps {
   open: boolean
@@ -14,6 +20,10 @@ interface IBFDrawerProps {
 }
 
 const BFDrawer: React.FC<IBFDrawerProps> = ({ open, onCloseDrawer, isBasket, isFavorite }) => {
+  const { cart, totalPrice } = useSelector(selectCart)
+  const totalCount = cart.reduce((sum: number, obj: ICartItem) => sum + obj.quantity, 0)
+  const dispatch = useAppDispatch()
+
   return (
     <Drawer
       anchor='right'
@@ -26,49 +36,59 @@ const BFDrawer: React.FC<IBFDrawerProps> = ({ open, onCloseDrawer, isBasket, isF
         {isFavorite && 'Избранное'}
       </Typography>
       <Box id='bf-items'>
-        {['2', '0'].map((_, idx) => (
-          <React.Fragment key={idx}>
-            <Box sx={{ m: 1, border: '1px solid rgba(0, 0, 0, 0.5)', position: 'relative' }}>
-              <IconButton sx={{ position: 'absolute', top: 2, right: 2 }}>
-                <CloseOutlinedIcon />
-              </IconButton>
-              <Box sx={{ display: 'flex', p: 1, alignItems: 'center' }}>
-                <Link to='/home' onClick={() => onCloseDrawer(false)}>
-                  <Box
-                    component='img'
-                    src='https://ik.imagekit.io/ax4ptc7e2/Cards/w1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544475'
-                    alt="sewing's image"
-                    sx={{
-                      maxWidth: { xs: '70px', sm: '100px', md: '150px' },
-                      maxHeight: { xs: '70px', sm: '100px', md: '150px' },
-                    }}
-                  />
-                </Link>
-                <Box sx={{ ml: 1 }}>
+        {isBasket &&
+          cart.length > 0 &&
+          cart.map((item, idx) => (
+            <React.Fragment key={idx}>
+              <Box sx={{ m: 1, border: '1px solid rgba(0, 0, 0, 0.5)', position: 'relative' }}>
+                <IconButton
+                  sx={{ position: 'absolute', top: 2, right: 2 }}
+                  onClick={() => dispatch(removeToCart(item.image))}
+                >
+                  <CloseOutlinedIcon />
+                </IconButton>
+                <Box sx={{ display: 'flex', p: 1, alignItems: 'center' }}>
+                  <Link to='/home' onClick={() => onCloseDrawer(false)}>
+                    <Box
+                      component='img'
+                      src={API_URL + item.image.slice(1)}
+                      alt="sewing's image"
+                      sx={{
+                        maxWidth: { xs: '70px', sm: '100px', md: '150px' },
+                        maxHeight: { xs: '70px', sm: '100px', md: '150px' },
+                      }}
+                    />
+                  </Link>
+                  <Box sx={{ ml: 1 }}>
+                    <Typography
+                      variant='h6'
+                      sx={{ fontSize: { xs: '16px', sm: '18px', md: '20px' } }}
+                      onClick={() => onCloseDrawer(false)}
+                    >
+                      {item.title}
+                    </Typography>
+                    <Typography variant='subtitle1' color='gray'>
+                      {item.description.slice(0, 15)}...
+                    </Typography>
+                  </Box>
+                </Box>
+                <Divider sx={{ mx: 1, mt: 2, borderColor: 'rgba(0, 0, 0, 0.5)' }} />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    p: 1,
+                  }}
+                >
                   <Typography
                     variant='h6'
                     sx={{ fontSize: { xs: '16px', sm: '18px', md: '20px' } }}
-                    component={Link}
-                    to='/home'
-                    onClick={() => onCloseDrawer(false)}
                   >
-                    Швейная машина
+                    {item.price} som
                   </Typography>
-                  <Typography variant='subtitle1' color='gray'>
-                    еlna eхperience 570
-                  </Typography>
-                </Box>
-              </Box>
-              <Divider sx={{ mx: 1, mt: 2, borderColor: 'rgba(0, 0, 0, 0.5)' }} />
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', p: 1 }}
-              >
-                <Typography variant='h6' sx={{ fontSize: { xs: '16px', sm: '18px', md: '20px' } }}>
-                  4200 som
-                </Typography>
-                {isBasket && (
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <IconButton>
+                    <IconButton onClick={() => dispatch(decrementCount(item.image))}>
                       <RemoveOutlinedIcon
                         sx={{
                           cursor: 'pointer',
@@ -77,8 +97,8 @@ const BFDrawer: React.FC<IBFDrawerProps> = ({ open, onCloseDrawer, isBasket, isF
                         }}
                       />
                     </IconButton>
-                    <Typography sx={{ p: 1 }}>1</Typography>
-                    <IconButton>
+                    <Typography sx={{ p: 1 }}>{item.quantity}</Typography>
+                    <IconButton onClick={() => dispatch(addToCart(item))}>
                       <AddOutlinedIcon
                         sx={{
                           cursor: 'pointer',
@@ -88,25 +108,34 @@ const BFDrawer: React.FC<IBFDrawerProps> = ({ open, onCloseDrawer, isBasket, isF
                       />
                     </IconButton>
                   </Box>
-                )}
+                </Box>
               </Box>
-            </Box>
-          </React.Fragment>
-        ))}
+            </React.Fragment>
+          ))}
+        {isBasket && cart.length <= 0 && (
+          <Typography variant='h5' sx={{ textAlign: 'center' }}>
+            Корзина пуста
+          </Typography>
+        )}
+        {isFavorite && (
+          <Typography variant='h5' sx={{ textAlign: 'center' }}>
+            Избранное пусто
+          </Typography>
+        )}
       </Box>
-      {isBasket && (
+      {isBasket && cart.length > 0 && (
         <Box sx={{ py: 3, px: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant='h6' sx={{ fontSize: { xs: '19px', md: '20px' } }}>
-              2 товара
+              {totalCount} товара
             </Typography>
             <Typography variant='h6' sx={{ fontSize: { xs: '18px', md: '19px' } }}>
-              84000сом
+              {totalPrice}сом
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant='h6' sx={{ fontSize: { xs: '19px' } }}>
-              Доставка{' '}
+              Доставка
             </Typography>
             <Typography variant='h6' sx={{ fontSize: { xs: '18px' } }}>
               Бесплатно
@@ -120,7 +149,7 @@ const BFDrawer: React.FC<IBFDrawerProps> = ({ open, onCloseDrawer, isBasket, isF
               Сумма заказа
             </Typography>
             <Typography variant='h6' sx={{ fontSize: { xs: '18px' } }}>
-              84000сом
+              {totalPrice}сом
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

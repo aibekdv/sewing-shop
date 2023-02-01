@@ -1,5 +1,5 @@
 export interface ICardItem {
-  slug?: string
+  slug: string
   title: string
   description: string
   price: number
@@ -15,4 +15,15 @@ export interface IMasterItem {
   name: string
   about: string
   phone: string
+}
+
+export interface IProductState {
+  cards: ICardItem[]
+  status: 'loading' | 'success' | 'error'
+}
+
+export enum Status {
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  ERROR = 'error',
 }

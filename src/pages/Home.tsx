@@ -12,49 +12,17 @@ import ImgBlock3OurPart1 from '../assets/block3OurPart1.png'
 import ImgBlock3OurPart2 from '../assets/block3OurPart2.png'
 import ImgBlock3OurPart3 from '../assets/block3OurPart3.png'
 import ImgBlock3OurPart4 from '../assets/block3OurPart4.png'
-import { ICardItem, IMasterItem } from '../types/card.types'
+import { IMasterItem } from '../types/card.types'
+import { useSelector } from 'react-redux'
 import Cards from '../components/Cards'
 import PicBlock from '../components/PicBlock'
+import { useAppDispatch } from '../redux/store'
+import { fetchProducts } from '../redux/product/slice'
+import { selectProducts } from '../redux/product/selector'
 
 const Home: React.FC = () => {
-  const cards: ICardItem[] = [
-    {
-      title: 'Ткань курточная мембранная',
-      desc: 'DEWSPO 300T',
-      price: 250,
-      imgUrl: [
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/v1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274447097',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/v4.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274447093',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/v2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274446908',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/v3.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274446630',
-      ],
-      colors: ['#BA8DA0', '#000000', '#BEB6B6', '#F4EACE'],
-    },
-    {
-      title: 'Футер 3-х нитка петля диагональ',
-      desc: '88% хлопок,12% полиэстер',
-      price: 425,
-      imgUrl: [
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/w1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544475',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/w2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544760',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/w3.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544762',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/w4.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544471',
-      ],
-      colors: ['#F8EC81', '#4E6D4C', '#C39A99', '#1E222C'],
-    },
-    {
-      title: 'Ткань курточная мембранная',
-      desc: 'DEWSPO 300T',
-      price: 330,
-      imgUrl: [
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/q1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544477',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/q2.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544774',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/q3.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274544470',
-        'https://ik.imagekit.io/ax4ptc7e2/Cards/q4.png?ik-sdk-version=javascript-1.4.3&updatedAt=1674274543921',
-      ],
-      colors: ['#7F6643', '#7C7D7C', '#E9D1C5', '#A99F9E'],
-    },
-  ]
+  const dispatch = useAppDispatch()
+  const { cards } = useSelector(selectProducts)
 
   const masters: IMasterItem[] = [
     {
@@ -74,6 +42,10 @@ const Home: React.FC = () => {
     },
   ]
 
+  React.useEffect(() => {
+    dispatch(fetchProducts())
+  }, [])
+
   return (
     <>
       <PicBlock
@@ -85,7 +57,7 @@ const Home: React.FC = () => {
       />
 
       <Container maxWidth='lg' sx={{ my: 2 }}>
-        <Cards products={cards} />
+        <Cards products={cards.slice(0, 3)} />
       </Container>
 
       <Box

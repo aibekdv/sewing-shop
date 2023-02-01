@@ -8,6 +8,12 @@ import styles from './CardItem.module.scss'
 import { Box } from '@mui/system'
 import { ICardItem, IMasterItem } from '../../types/card.types'
 import ModalCardItem from '../ModalCardItem'
+import imgNotFound from '../../assets/notfound.png'
+import { API_URL } from '../../utils/helpers/getEnv'
+import { useSelector } from 'react-redux'
+import { selectProducts } from '../../redux/product/selector'
+import { useAppDispatch } from '../../redux/store'
+import { addToCart } from '../../redux/cart/slice'
 
 interface ICardProps {
   card?: ICardItem
@@ -15,8 +21,24 @@ interface ICardProps {
 }
 
 const CardItem: React.FC<ICardProps> = ({ card, master }) => {
+  const dispatch = useAppDispatch()
   const [imgIdx, setImgIdx] = React.useState(0)
   const [isOpenModal, setIsOpenModal] = React.useState(false)
+  const { status } = useSelector(selectProducts)
+  const imgFetch = card?.carousel[imgIdx]?.images.slice(1)
+
+  const cartData = {
+    slug: card?.slug,
+    title: card?.title,
+    description: card?.description,
+    price: card?.price,
+    image: card?.carousel[imgIdx]?.images,
+    quantity: 1,
+  }
+
+  if (status === 'loading') {
+    return <h2>This page is loaded</h2>
+  }
 
   return (
     <Card className={styles.card} sx={{ boxShadow: 'none', borderRadius: 0 }}>
@@ -79,8 +101,8 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
         <>
           <CardContent sx={{ p: 0 }}>
             <img
-              src={card?.imgUrl[imgIdx]}
-              alt='card item one'
+              src={imgFetch ? API_URL + imgFetch : imgNotFound}
+              alt={card.title}
               onClick={() => setIsOpenModal(true)}
             />
             <Box>
@@ -120,7 +142,7 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
                 })}
                 className={styles.colgray}
               >
-                {card.desc}
+                {card.description.slice(0, 15)} ...
               </Typography>
               <Typography
                 variant='h6'
@@ -141,11 +163,11 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
               </Typography>
             </Box>
             <Box className={styles.colors}>
-              {card.colors?.map((color, index) => (
+              {card.color?.map((color, index: number) => (
                 <button
                   key={index}
                   style={{
-                    backgroundColor: color,
+                    backgroundColor: color.color,
                     border: imgIdx === index ? '2px solid #0047FF' : '',
                   }}
                   className={styles.btn_color}
@@ -155,7 +177,13 @@ const CardItem: React.FC<ICardProps> = ({ card, master }) => {
             </Box>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button size='small' variant='outlined' color='inherit' className={styles.card_btn}>
+            <Button
+              size='small'
+              variant='outlined'
+              color='inherit'
+              className={styles.card_btn}
+              onClick={() => dispatch(addToCart(cartData))}
+            >
               Добавить в корзину
             </Button>
           </CardActions>

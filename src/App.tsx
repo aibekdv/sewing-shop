@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import ResetPassword from './components/Auth/ResetPassword'
 import BaseLayout from './layout/BaseLayout'
 import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
@@ -15,7 +14,6 @@ const App: React.FC = () => {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
-        <Route path='/reset' element={<ResetPassword />} />
         <Route path='/user/:id' element={<UserProfile />} />
         <Route path='*' element={<NotFound />} />
       </Routes>

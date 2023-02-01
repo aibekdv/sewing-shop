@@ -24,16 +24,16 @@ const BasicMenu: React.FC<IMenuProps> = ({ open, anchorEl, onCloseMenu }) => {
     >
       <Box sx={{ py: 2, width: '250px' }}>
         <MenuItem onClick={onCloseMenu}>
-          <Link to='/catalog'>Фурнитура</Link>
+          <Link to='/'>Главная</Link>
         </MenuItem>
         <MenuItem onClick={onCloseMenu}>
-          <Link to='#'>Швейные машинки</Link>
+          <Link to='#'>Каталог</Link>
         </MenuItem>
         <MenuItem onClick={onCloseMenu}>
-          <Link to='#'>Швейные запчасти</Link>
+          <Link to='#'>О компании</Link>
         </MenuItem>
         <MenuItem onClick={onCloseMenu}>
-          <Link to='#'>Ткани</Link>
+          <Link to='#'>Услуги</Link>
         </MenuItem>
       </Box>
     </Menu>
